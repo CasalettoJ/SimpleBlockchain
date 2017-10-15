@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace NaiveCoin
 {
-    class Program
+    public static class Constants
     {
-        static void Main(string[] args)
+        public static class FileIO
         {
-            NaiveCoin coin = new NaiveCoin();
-            coin.Run();
+            public static readonly string BlockchainOutput = "blockchain.dat";
         }
     }
 }
