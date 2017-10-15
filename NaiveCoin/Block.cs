@@ -26,8 +26,7 @@ namespace NaiveCoin
 
         public static string HashBlock(Block block)
         {
-            string hash = string.Format("{0}{1}{2}{3}", block.Index, block.TimeStamp.ToString(), block.Data, block.PreviousHash).GetSha256();
-            return hash;
+            return string.Format("{0}{1}{2}{3}", block.Index, block.TimeStamp.ToString(), block.Data, block.PreviousHash).GetSha256();
         }
 
         public static Block GenerateGenesisBlock()

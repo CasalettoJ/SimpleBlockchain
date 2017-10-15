@@ -23,6 +23,12 @@ namespace NaiveCoin
             }
         }
 
+        public static bool IsEqual(this string str, string other)
+        {
+            StringComparer sc = StringComparer.Ordinal;
+            return sc.Compare(str, other) == 0;
+        }
+
         public static bool VerifySha256(this string str, string sha256)
         {
             string check256 = str.GetSha256();

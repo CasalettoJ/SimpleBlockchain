@@ -33,45 +33,65 @@ namespace NaiveCoin
                 Console.WriteLine("1: Add New Block");
                 Console.WriteLine("2: Blockchain Info");
                 Console.WriteLine("3: View Block");
-                while (!int.TryParse(Console.ReadLine(), out choice))
-                {
-
-                }
+                while (!int.TryParse(Console.ReadLine(), out choice)){}
                 switch (choice)
                 {
                     case 0:
                         return;
                     case 1:
-                        Console.WriteLine(Environment.NewLine + "Enter Data to include: ");
-                        _blockchain.Add(new Block(UInt64.Parse(_blockchain.Blocks.Count.ToString()), DateTime.UtcNow, Console.ReadLine(), _blockchain.Blocks[_blockchain.Blocks.Count - 1].Hash));
-                        Console.WriteLine("Block added.");
-                        Console.WriteLine(Environment.NewLine + _blockchain.Blocks[_blockchain.Blocks.Count - 1].ToString());
+                        AddBlock();
                         break;
                     case 2:
-                        Console.WriteLine(Environment.NewLine + "Blocks: " + _blockchain.Blocks.Count);
-                        Console.WriteLine("Last block added: " + _blockchain.Blocks[_blockchain.Blocks.Count - 1].TimeStamp.ToLongDateString() + _blockchain.Blocks[_blockchain.Blocks.Count - 1].TimeStamp.ToLongTimeString());
+                        PrintBlockchainData();
                         break;
                     case 3:
-                        int blockIndex = 0;
-                        while (blockIndex != -1)
-                        {
-                            Console.WriteLine(Environment.NewLine + "Enter block index (-1 to quit): ");
-                            while (!int.TryParse(Console.ReadLine(), out blockIndex)) { }
-                            if (blockIndex >= 0 && blockIndex < _blockchain.Blocks.Count)
-                            {
-                                Console.WriteLine(Environment.NewLine + _blockchain.Blocks[blockIndex].ToString());
-                            }
-                            else
-                            {
-                                Console.WriteLine("Out of range.");
-                            }
-                        }
-                        break;
-                    default:
+                        ExploreBlocks();
                         break;
                 }
             }
         }
+
+
+        #region Menu Items
+        private void AddBlock()
+        {
+            Console.WriteLine(Environment.NewLine + "Enter Data to include: ");
+            if(_blockchain.Add(new Block(UInt64.Parse(_blockchain.Blocks.Count.ToString()), DateTime.UtcNow, Console.ReadLine(), _blockchain.Blocks[_blockchain.Blocks.Count - 1].Hash)))
+            {
+                Console.WriteLine("Block added.");
+                Console.WriteLine(Environment.NewLine + _blockchain.Blocks[_blockchain.Blocks.Count - 1].ToString());
+            }
+            else
+            {
+                Console.WriteLine("Block failed to verify.");
+            }
+        }
+
+        private void PrintBlockchainData()
+        {
+            Console.WriteLine(Environment.NewLine + "Blocks: " + _blockchain.Blocks.Count);
+            Console.WriteLine("Last block added: " + _blockchain.Blocks[_blockchain.Blocks.Count - 1].TimeStamp.ToLongDateString() + _blockchain.Blocks[_blockchain.Blocks.Count - 1].TimeStamp.ToLongTimeString());
+        }
+
+        private void ExploreBlocks()
+        {
+            int blockIndex = 0;
+            while (blockIndex != -1)
+            {
+                Console.WriteLine(Environment.NewLine + "Enter block index (-1 to quit) 0 - " + (_blockchain.Blocks.Count-1).ToString() + ": ");
+                while (!int.TryParse(Console.ReadLine(), out blockIndex)) { }
+                if (blockIndex >= 0 && blockIndex < _blockchain.Blocks.Count)
+                {
+                    Console.WriteLine(Environment.NewLine + _blockchain.Blocks[blockIndex].ToString());
+                }
+                else
+                {
+                    Console.WriteLine("Out of range.");
+                }
+            }
+        }
+        #endregion
+
 
     }
 }

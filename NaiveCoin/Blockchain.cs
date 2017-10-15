@@ -14,6 +14,9 @@ namespace NaiveCoin
     {
         private List<Block> _blocks = new List<Block>();
         public ReadOnlyCollection<Block> Blocks { get { return _blocks.AsReadOnly(); } }
+        public int Length => Blocks.Count;
+        public int LastIndex => Blocks.Count - 1;
+        public Block LastBlock => Blocks[LastIndex];
 
         public Blockchain()
         {
@@ -24,10 +27,54 @@ namespace NaiveCoin
             Console.WriteLine(Blocks[0].ToString());
         }
 
-        public void Add(Block block)
+        public Blockchain(List<Block> blocks)
         {
+            _blocks = blocks ?? new List<Block>();
+        }
+
+        public bool Add(Block block)
+        {
+            if (!this.VerifyNewBlock(this.LastBlock, block)) return false;
             _blocks.Add(block);
             Blockchain.SaveChain(this);
+            return true;
+        }
+
+        public bool VerifyNewBlock(Block prevBlock, Block newBlock)
+        {
+            if (newBlock.Index - 1 != prevBlock.Index) return false;
+            if (prevBlock.Hash.VerifySha256(newBlock.PreviousHash)) return false;
+            if (!newBlock.Hash.IsEqual(Block.HashBlock(newBlock))) return false;
+            return true;
+        }
+
+        public bool ReplaceChain(Blockchain chain)
+        {
+            if(Blockchain.ChainValidation(chain) && chain.Length > this.Length)
+            {
+                Console.WriteLine("Replacing blockchain...");
+                _blocks = chain.Blocks.ToList();
+                return true;
+            }
+            return false;
+        }
+
+        public static bool ChainValidation(Blockchain chain)
+        {
+            if (chain.Blocks[0] != Block.GenerateGenesisBlock()) return false;
+            List<Block> temporaryBlockchain = new List<Block>() { chain.Blocks[0] };
+            for (int i = 1; i < chain.Length; i++)
+            {
+                if(chain.VerifyNewBlock(temporaryBlockchain[i-1],chain.Blocks[i]))
+                {
+                    temporaryBlockchain.Add(chain.Blocks[i]);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static void SaveChain(Blockchain block)
