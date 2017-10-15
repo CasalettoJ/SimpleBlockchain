@@ -9,11 +9,13 @@ namespace NaiveCoin
     public class NaiveCoin
     {
         private Blockchain _blockchain = null;
+        //private Server _server = null;
 
         public void Run()
         {
             if (!Initialize()) return;
             if (!Validate()) return;
+            Task.Run(async () => await RunServer());
             RunMenu();
         }
 
@@ -28,6 +30,12 @@ namespace NaiveCoin
             Console.WriteLine("Loading Blockchain...");
             _blockchain = null;
             return Blockchain.LoadChain(out _blockchain);
+        }
+
+        private async Task RunServer()
+        {
+            //_server = new Server();
+            //await Task.Run(() => _server.Run());
         }
 
         private void RunMenu()
