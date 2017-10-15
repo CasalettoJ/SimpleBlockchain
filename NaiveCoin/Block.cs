@@ -31,7 +31,7 @@ namespace NaiveCoin
 
         public static Block GenerateGenesisBlock()
         {
-            return new Block(0, DateTime.UtcNow, "This is the genesis block.", "0");
+            return new Block(0, DateTime.MinValue, "This is the genesis block.", "0");
         }
 
         public override string ToString()

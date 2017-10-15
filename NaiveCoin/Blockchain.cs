@@ -22,6 +22,10 @@ namespace NaiveCoin
         {
             Console.WriteLine("Genesis block created.");
             _blocks.Add(Block.GenerateGenesisBlock());
+            for(int i = 1; i < 29013; i++)
+            {
+                _blocks.Add(new Block(UInt64.Parse((i).ToString()), DateTime.UtcNow, "generated", _blocks[i-1].Hash));
+            }
             Blockchain.SaveChain(this);
             Console.WriteLine(Environment.NewLine);
             Console.WriteLine(Blocks[0].ToString());
@@ -61,7 +65,7 @@ namespace NaiveCoin
 
         public static bool ChainValidation(Blockchain chain)
         {
-            if (chain.Blocks[0] != Block.GenerateGenesisBlock()) return false;
+            if (!Block.HashBlock(chain.Blocks[0]).IsEqual(Block.HashBlock(Block.GenerateGenesisBlock()))) return false;
             List<Block> temporaryBlockchain = new List<Block>() { chain.Blocks[0] };
             for (int i = 1; i < chain.Length; i++)
             {

@@ -13,12 +13,19 @@ namespace NaiveCoin
         public void Run()
         {
             if (!Initialize()) return;
+            if (!Validate()) return;
             RunMenu();
+        }
+
+        private bool Validate()
+        {
+            Console.WriteLine(Environment.NewLine + "Validating Blockchain...");
+            return Blockchain.ChainValidation(_blockchain);
         }
 
         private bool Initialize()
         {
-            Console.WriteLine("Loading Blockchain..");
+            Console.WriteLine("Loading Blockchain...");
             _blockchain = null;
             return Blockchain.LoadChain(out _blockchain);
         }
